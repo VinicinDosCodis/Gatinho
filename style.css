@@ -1,1 +1,46 @@
-body{font-family:Arial,sans-serif;text-align:center;padding:20px;background:#fafafa;}h1{font-size:24px;margin-bottom:20px;}#camera{width:90%;max-width:350px;border-radius:10px;margin-bottom:15px;background:#000;}#canvas{width:90%;max-width:350px;margin-top:10px;display:none;}button{padding:12px 20px;background:#673ab7;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:18px;}button:hover{background:#512da8;}#fact{margin-top:20px;font-size:18px;color:#333;}
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #fafafa;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#camera {
+  width: 90%;
+  max-width: 350px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #000;
+}
+
+#canvas {
+  width: 90%;
+  max-width: 350px;
+  margin-top: 10px;
+  display: none;
+}
+
+button {
+  padding: 12px 20px;
+  background: #673ab7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+button:hover {
+  background: #512da8;
+}
+
+#fact {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #333;
+}
