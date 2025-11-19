@@ -16,11 +16,23 @@ button.addEventListener("click", async () => {
   ctx.drawImage(video, 0, 0);
   canvas.style.display = "block";
 
-  // API pública - fato de gato
-  const res = await fetch("https://catfact.ninja/fact");
-  const data = await res.json();
-  factText.textContent = "🐈 Fato: " + data.fact;
+// API pública - fato de gato + tradução PT-BR
+const res = await fetch("https://catfact.ninja/fact");
+const data = await res.json();
+
+// Traduzir para português usando LibreTranslate
+const translateRes = await fetch("https://libretranslate.de/translate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    q: data.fact,
+    source: "en",
+    target: "pt"
+  })
 });
+
+const translated = await translateRes.json();
+factText.textContent = "🐈 Fato: " + translated.translatedText;
 
 // Registrar service worker
 if ("serviceWorker" in navigator) {
