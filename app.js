@@ -8,10 +8,24 @@ const factText = document.getElementById("fact-text");
 // --------------------- CÂMERA ------------------------
 async function startCamera() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { exact: "environment" } // força usar a câmera traseira
+            }
+        });
+
         video.srcObject = stream;
     } catch (err) {
-        alert("Erro ao acessar a câmera: " + err.message);
+        console.warn("Não foi possível forçar a câmera traseira. Tentando fallback...");
+
+        // fallback para todos os dispositivos
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "environment"
+            }
+        });
+
+        video.srcObject = stream;
     }
 }
 
