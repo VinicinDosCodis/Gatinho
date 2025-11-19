@@ -1,40 +1,63 @@
-// Iniciar câmera
-const video = document.getElementById("camera");
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => video.srcObject = stream);
+// Selecionar elementos
+const captureBtn = document.getElementById("capture-btn");
+const factBtn = document.getElementById("fact-btn");
+const video = document.getElementById("video");
+const photo = document.getElementById("photo");
+const factText = document.getElementById("fact-text");
 
-// Capturar foto
-const button = document.getElementById("btn-capture");
-const canvas = document.getElementById("canvas");
-const factText = document.getElementById("fact");
+// --- Inicializar Câmera ---
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+    } catch (error) {
+        alert("Erro ao acessar a câmera: " + error.message);
+    }
+}
 
-button.addEventListener("click", async () => {
-  const ctx = canvas.getContext("2d");
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+// --- Capturar Foto da Câmera ---
+captureBtn.addEventListener("click", () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-  ctx.drawImage(video, 0, 0);
-  canvas.style.display = "block";
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-// API pública - fato de gato + tradução PT-BR
-const res = await fetch("https://catfact.ninja/fact");
-const data = await res.json();
-
-// Traduzir para português usando LibreTranslate
-const translateRes = await fetch("https://libretranslate.de/translate", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    q: data.fact,
-    source: "en",
-    target: "pt"
-  })
+    photo.src = canvas.toDataURL("image/png");
 });
 
-const translated = await translateRes.json();
-factText.textContent = "🐈 Fato: " + translated.translatedText;
+// --- Buscar Fato de Gato e Traduzir para PT-BR ---
+factBtn.addEventListener("click", async () => {
+    factText.textContent = "Carregando fato...";
 
-// Registrar service worker
+    try {
+        // 1. API pública com fatos sobre gatos
+        const res = await fetch("https://catfact.ninja/fact");
+        const data = await res.json();
+
+        // 2. Traduzir automaticamente para Português
+        const translateURL =
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(data.fact)}&langpair=en|pt-BR`;
+
+        const tRes = await fetch(translateURL);
+        const tData = await tRes.json();
+
+        factText.textContent = "🐈 Fato: " + tData.responseData.translatedText;
+    } catch (error) {
+        factText.textContent = "❌ Erro ao carregar o fato.";
+        console.error(error);
+    }
+});
+
+// --- Registrar o Service Worker ---
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js")
+            .then(() => console.log("Service Worker registrado"))
+            .catch(err => console.log("Erro no Service Worker:", err));
+    });
 }
+
+// Iniciar a câmera ao carregar
+startCamera();
