@@ -1,46 +1,50 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-  background: #fafafa;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
 }
 
 h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
-#camera {
-  width: 90%;
-  max-width: 350px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  background: #000;
+.camera-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
-#canvas {
-  width: 90%;
-  max-width: 350px;
-  margin-top: 10px;
-  display: none;
+video, img {
+    width: 45%;
+    max-width: 300px;
+    border-radius: 10px;
+    background: #000;
+}
+
+.buttons {
+    margin-top: 20px;
 }
 
 button {
-  padding: 12px 20px;
-  background: #673ab7;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 18px;
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #ff9800;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
 button:hover {
-  background: #512da8;
+    background: #e68900;
 }
 
-#fact {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #333;
+#fact-text {
+    margin-top: 20px;
+    font-size: 18px;
 }
