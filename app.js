@@ -1,21 +1,22 @@
-// Selecionar elementos
 const captureBtn = document.getElementById("capture-btn");
 const factBtn = document.getElementById("fact-btn");
 const video = document.getElementById("video");
 const photo = document.getElementById("photo");
 const factText = document.getElementById("fact-text");
 
-// --- Inicializar Câmera ---
+
+// --------------------- CÂMERA ------------------------
 async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
-    } catch (error) {
-        alert("Erro ao acessar a câmera: " + error.message);
+    } catch (err) {
+        alert("Erro ao acessar a câmera: " + err.message);
     }
 }
 
-// --- Capturar Foto da Câmera ---
+
+// ----------------- TIRAR FOTO ------------------------
 captureBtn.addEventListener("click", () => {
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
@@ -27,37 +28,40 @@ captureBtn.addEventListener("click", () => {
     photo.src = canvas.toDataURL("image/png");
 });
 
-// --- Buscar Fato de Gato e Traduzir para PT-BR ---
+
+// ---------------- FATO + TRADUÇÃO --------------------
 factBtn.addEventListener("click", async () => {
-    factText.textContent = "Carregando fato...";
+    factText.textContent = "Carregando fato sobre gatos...";
 
     try {
-        // 1. API pública com fatos sobre gatos
         const res = await fetch("https://catfact.ninja/fact");
         const data = await res.json();
+        const original = data.fact;
 
-        // 2. Traduzir automaticamente para Português
         const translateURL =
-            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(data.fact)}&langpair=en|pt-BR`;
+            "https://api.allorigins.win/get?url=" +
+            encodeURIComponent(
+                `https://api.mymemory.translated.net/get?q=${encodeURIComponent(original)}&langpair=en|pt-BR`
+            );
 
         const tRes = await fetch(translateURL);
         const tData = await tRes.json();
 
-        factText.textContent = "🐈 Fato: " + tData.responseData.translatedText;
-    } catch (error) {
-        factText.textContent = "❌ Erro ao carregar o fato.";
-        console.error(error);
+        const translated = JSON.parse(tData.contents).responseData.translatedText;
+
+        factText.textContent = "🐱 " + translated;
+    } catch (err) {
+        console.error(err);
+        factText.textContent = "Erro ao carregar o fato.";
     }
 });
 
-// --- Registrar o Service Worker ---
+
+// ------------- SERVICE WORKER (PWA) -------------------
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js")
-            .then(() => console.log("Service Worker registrado"))
-            .catch(err => console.log("Erro no Service Worker:", err));
-    });
+    navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.log("Erro ao registrar:", err));
 }
 
-// Iniciar a câmera ao carregar
 startCamera();
